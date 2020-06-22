@@ -1,24 +1,49 @@
 import React, { Component } from 'react'
 import classes from './QuizList.module.css'
 import { NavLink } from 'react-router-dom'
+import Loader from '../../components/UI/Loader/Loader';
+import axios from '../../axios/axios-quiz'
 
 export default class QuizList extends Component {
+
+  state = {
+    quizzes: [],
+    loading: true
+  }
+
   renderQuizzes() {
-    return [1, 2, 3].map((quizItem, index) => {
+    return this.state.quizzes.map(quizItem => {
       return (
         <li
-          key={index}
+          key={quizItem.id}
         >
-          <NavLink to={`/quiz/${quizItem}`}>
-            Test {quizItem}
+          <NavLink to={`/quiz/${quizItem.id}`}>
+            {quizItem.name}
           </NavLink>
         </li>
       )
     })
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    try {
+      const response = await axios.get('quizzes.json')
+      const quizzes = []
 
+      Object.keys(response.data).forEach((key, index) => {
+        quizzes.push({
+          id: key,
+          name: `Test #${index + 1}`
+        })
+      })
+
+      this.setState({
+        quizzes,
+        loading: false
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {
@@ -27,9 +52,13 @@ export default class QuizList extends Component {
         <div>
           <h1>Test list</h1>
 
-          <ul>
-            { this.renderQuizzes() }
-          </ul>
+          {
+            this.state.loading
+            ? <Loader />
+            : <ul>
+                { this.renderQuizzes() }
+              </ul>
+          }
         </div>
       </div>
     );

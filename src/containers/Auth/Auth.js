@@ -3,11 +3,7 @@ import classes from './Auth.module.css'
 import Button from '../../components/UI/Button/Button';
 import Input from '../../components/UI/Input/Input';
 import is from 'is_js'
-
-// function validateEmail(email) {
-//   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//   return re.test(String(email).toLowerCase());
-// }
+import axios from 'axios'
 
 export default class Auth extends Component {
   state = {
@@ -40,16 +36,38 @@ export default class Auth extends Component {
     }
   }
 
-  loginHandler = () => {
-
+  loginHandler = async () => {
+    try {
+      const authData = {
+        email: this.state.formControls.email.value,
+        password: this.state.formControls.password.value,
+        returnSecureToken: true
+      }
+      const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBEzHtlRx3UlwdIhP5FNDacKfZ3rEoeYDQ'
+      const response = await axios.post(url, authData)
+      console.log(response.data)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
-  registerHandler = event => {
+  registerHandler = async event => {
+    try {
+      const authData = {
+        email: this.state.formControls.email.value,
+        password: this.state.formControls.password.value,
+        returnSecureToken: true
+      }
+      const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBEzHtlRx3UlwdIhP5FNDacKfZ3rEoeYDQ'
+      const response = await axios.post(url, authData)
+      console.log(response.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  submitHandler = event => {
     event.preventDefault()
-  }
-
-  submitHandler = () => {
-
   }
 
   validateControl(value, validation) {
@@ -65,7 +83,6 @@ export default class Auth extends Component {
 
     if (validation.email) {
       isValid = is.email(value) && isValid
-      // isValid = validateEmail(value) && isValid
     }
 
     if (validation.minLength) {
