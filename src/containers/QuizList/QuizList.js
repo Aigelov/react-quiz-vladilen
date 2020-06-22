@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classes from './QuizList.module.css'
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
 export default class QuizList extends Component {
   renderQuizzes() {
@@ -16,6 +16,11 @@ export default class QuizList extends Component {
       )
     })
   }
+
+  componentDidMount() {
+
+  }
+
   render() {
     return (
       <div className={classes.QuizList}>
